@@ -12,7 +12,11 @@ CREATE TABLE subscription_cancellations (
     ledger BIGINT NOT NULL,
     transaction_hash TEXT NOT NULL,
     reason TEXT,
+    reason_code TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+    CONSTRAINT subscription_cancellations_reason_code_known
+        CHECK (reason_code IS NULL OR reason_code IN ('CONTRIBUTOR_WITHDREW','MAINTAINER_REVOKED','TTL_EXPIRED','ADMIN_CANCELLED')),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 
     CONSTRAINT subscription_cancellations_network_known

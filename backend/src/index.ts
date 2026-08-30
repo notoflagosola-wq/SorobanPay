@@ -28,6 +28,7 @@ import notificationsRouter from './routes/notifications';
 import kycRouter from './routes/kyc';
 import versionRouter from './routes/version';
 import analyticsRouter from './routes/analytics';   // FE-50 / BE-52
+import cancellationsRouter from './routes/cancellations';  // Audit trail: subscription cancellations API
 import adminRouter from './routes/admin';
 import authRouter from './routes/auth';                        // BE-55: merchant auth
 import { buildHealthRouter } from './routes/health';
@@ -96,6 +97,13 @@ app.use('/api/v1/reconcile',     reconcileRouter);
 app.use('/api/v1/notifications', notificationsRouter);  // BE-68
 app.use('/api/v1/admin',         adminRouter);          // BE-75: admin dashboard
 app.use('/api/v1/analytics',     requireMerchant, analyticsRouter);  // FE-50: revenue analytics
+
+// Cancellation audit endpoints (create/list). Mounted both under versioned and legacy aliases.
+app.use('/api/v1/subscriptions/cancellations', requireMerchant, cancellationsRouter);
+app.use('/api/subscriptions/cancellations', cancellationsRouter);
+// Merchant-facing listing: GET /api/merchants/:merchantAddress/cancellations
+app.use('/api/v1/merchants', requireMerchant, cancellationsRouter);
+app.use('/api/merchants', cancellationsRouter);
 
 // ─── Prometheus metrics (unauthenticated — restrict to internal network) ─────
 app.get('/metrics', (_req, res) => {

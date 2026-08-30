@@ -106,6 +106,10 @@ components:
         reason:
           type: string
           maxLength: 1000
+        reasonCode:
+          type: string
+          description: "Structured reason code indicating why the subscription was cancelled. Prefer this over free-text when available."
+          enum: [CONTRIBUTOR_WITHDREW, MAINTAINER_REVOKED, TTL_EXPIRED, ADMIN_CANCELLED]
     CreateCancellationAuditResponse:
       type: object
       required:
